@@ -1,0 +1,24 @@
+@import 'variables';
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+    font-family: $main-font-family;
+    font-size: $base-font-size;
+
+    @media (max-width: $medium-screen) {
+        font-size: $base-font-size - 2px;
+    }
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    padding: 0 2 * $base-space;
+    margin: auto;
+    background: $ghost-white-color;
+}
