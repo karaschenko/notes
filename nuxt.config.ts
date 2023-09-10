@@ -4,5 +4,5 @@ export default defineNuxtConfig({
   modules: [
     '@pinia/nuxt',
   ],
-  css: ['@/assets/scss/global.scss'],
+  css: ['@fortawesome/fontawesome-free/css/all.css', '@/assets/scss/global.scss'],
 })

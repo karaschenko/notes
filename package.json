@@ -14,7 +14,9 @@
     "sass": "^1.66.1"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.4.2",
     "@pinia/nuxt": "^0.4.11",
+    "click-outside-vue3": "^4.0.1",
     "idb": "^7.1.1",
     "pinia": "^2.1.6",
     "vue3-markdown-it": "^1.0.10"
