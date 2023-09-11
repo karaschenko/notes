@@ -4,12 +4,9 @@ import { Note, MyDB } from "~/types/types";
 const dbName = "notesDB";
 const dbVersion = 1;
 
-// Function to open the IndexedDB database
 async function openNotesDB(): Promise<IDBPDatabase<MyDB>> {
-  console.log("openNotesDB");
   const db = await openDB<MyDB>(dbName, dbVersion, {
     upgrade(db) {
-      console.log("upgrade");
       try {
         const notesStore = db.createObjectStore("notes", {
           keyPath: "id",

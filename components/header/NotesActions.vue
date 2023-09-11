@@ -1,5 +1,3 @@
-<!-- components/NotesActions.vue -->
-
 <template>
   <div class="notes-actions">
     <ui-icon-button icon="fa-plus" @click="createNoteHandler" />
@@ -43,7 +41,6 @@ const removeNoteHandler = () => {
 const createNoteHandler = async () => {
   try {
     clearCurrentNote();
-    console.log(currentNote.value);
     const newNote = Object.assign({}, currentNote.value);
     const createdNote = await addNote(newNote);
     await fetchNotes();

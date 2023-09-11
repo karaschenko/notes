@@ -21,7 +21,6 @@ const toggleActive = () => {
 };
 
 const clickOutsideHandler = () => {
-  console.log("clickouts");
   isActive.value = false;
 };
 </script>
@@ -48,7 +47,6 @@ const clickOutsideHandler = () => {
   & .fas {
     font-size: 1.2rem;
     color: $light-gray-text;
-    margin-right: calc(0.5 * var(--base-space));
 
     @media (max-width: $medium-screen) {
       font-size: 1rem;

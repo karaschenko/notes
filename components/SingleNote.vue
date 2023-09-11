@@ -64,7 +64,6 @@ const handleFormLeave = async () => {
         currentNote.value.content
       );
       currentNote.value.id = activeNote.value;
-      console.log(activeNote.value);
       const updatedNote = Object.assign({}, currentNote.value);
       updateNote(updatedNote);
       setNoteEdit(false);

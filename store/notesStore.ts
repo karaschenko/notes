@@ -30,15 +30,11 @@ export const useNotesStore = defineStore("notes", {
     async updateNote(note: Note) {
       try {
         const updatedNote = await indexedDBService.updateNote(note);
-        console.log(updatedNote, "updatedNote");
         const index = this.notes.findIndex(
           (note) => note.id === updatedNote.id
         );
 
-        console.log(index, "index");
-
         if (index !== -1) {
-          // Replace the old note with the updated note
           this.notes.splice(index, 1, updatedNote);
         }
       } catch (e) {
@@ -49,7 +45,6 @@ export const useNotesStore = defineStore("notes", {
     async fetchNotes() {
       try {
         const notes = await indexedDBService.getAllNotes();
-        console.log("notes", notes);
         this.notes = notes;
       } catch (e) {
         console.log(e);
@@ -83,7 +78,6 @@ export const useNotesStore = defineStore("notes", {
 
     async searchNotes(query: string) {
       const searchResult = await indexedDBService.searchNotes(query);
-      console.log("searchResult", searchResult);
       this.notes = [...searchResult];
       return searchResult;
     },
