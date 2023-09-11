@@ -33,7 +33,7 @@
           Create note
         </ui-icon-button>
       </form>
-
+      <div v-if="isNoteEditing" class="note-editor__heading">Output:</div>
       <Markdown
         class="note-editor__result"
         @click="isNoteEditing = true"
@@ -141,6 +141,17 @@ const handleFormLeave = () => {
     padding: calc(2 * var(--base-space));
     text-align: left;
     align-self: flex-start;
+
+    blockquote {
+      margin: var(--base-space) auto;
+      padding: calc(2 * var(--base-space));
+      border-left: 2px solid #999;
+    }
+
+    ul,
+    ol {
+      padding: calc(2 * var(--base-space));
+    }
   }
 
   &__create {
