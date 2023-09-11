@@ -24,7 +24,6 @@ const notesStore = useNotesStore();
 const { notes, activeNote } = storeToRefs(notesStore);
 
 const selectNoteHandler = (id: number) => {
-  notesStore.setNewNote(false);
   notesStore.setActiveNote(id);
   notesStore.setCurrentNote();
 };

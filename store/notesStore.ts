@@ -7,7 +7,6 @@ import { formatDate } from "~/helpers/helpers";
 export const useNotesStore = defineStore("notes", {
   state: (): NotesStoreState => ({
     notes: [] as Note[],
-    isNewNote: false,
     isNoteEditing: false,
     activeNote: 0,
     currentNote: {
@@ -20,22 +19,27 @@ export const useNotesStore = defineStore("notes", {
   actions: {
     async addNote(note: Note) {
       try {
-        await indexedDBService.addNote(note);
+        const createdNote = await indexedDBService.addNote(note);
         this.notes.push(note);
+        return createdNote;
       } catch (e) {
         console.log(e);
       }
     },
 
-    async updateNote(id: number) {
+    async updateNote(note: Note) {
       try {
-        const updatedNote = Object.assign(
-          {},
-          this.notes.find((note) => note.id === id)
+        const updatedNote = await indexedDBService.updateNote(note);
+        console.log(updatedNote, "updatedNote");
+        const index = this.notes.findIndex(
+          (note) => note.id === updatedNote.id
         );
 
-        if (updatedNote) {
-          await indexedDBService.updateNote(updatedNote);
+        console.log(index, "index");
+
+        if (index !== -1) {
+          // Replace the old note with the updated note
+          this.notes.splice(index, 1, updatedNote);
         }
       } catch (e) {
         console.log(e);
@@ -61,13 +65,6 @@ export const useNotesStore = defineStore("notes", {
       this.activeNote = id;
     },
 
-    setNewNote(value: boolean) {
-      if (value) {
-        this.activeNote = 0;
-      }
-      this.isNewNote = value;
-    },
-
     setNoteEdit(value: boolean) {
       this.isNoteEditing = value;
     },
@@ -78,7 +75,7 @@ export const useNotesStore = defineStore("notes", {
 
     clearCurrentNote() {
       this.currentNote = {
-        title: "",
+        title: "New Note",
         content: "",
         date: formatDate(),
       };

@@ -1,10 +1,7 @@
 <template>
   <div>
-    <div v-if="notes.length < 1 && !isNewNote" class="note-placeholder">
+    <div v-if="notes.length < 1" class="note-placeholder">
       <div>There are no notes yet!</div>
-      <ui-icon-button icon="fa-plus" @click="setNewNote(true)"
-        >Create first</ui-icon-button
-      >
     </div>
 
     <div v-else class="note-editor">
@@ -12,21 +9,21 @@
         {{ currentNote?.date }}
       </div>
       <form
-        v-if="isNewNote || isNoteEditing"
-        @submit.prevent="addNoteHandler"
+        v-if="isNoteEditing"
+        @submit.prevent="handleFormLeave"
         v-click-outside="handleFormLeave"
         class="note-editor__form"
       >
         <textarea
           class="note-editor__field"
+          ref="editor"
+          s
           v-model="currentNote.content"
           placeholder="Type here"
-          required
+          @input="editorHandler"
         ></textarea>
       </form>
-      <div v-if="isNoteEditing || isNewNote" class="note-editor__heading">
-        Output:
-      </div>
+      <div v-if="isNoteEditing" class="note-editor__heading">Output:</div>
       <Markdown
         :class="['note-editor__result', { isNoteEditing }]"
         @click="isNoteEditing = true"
@@ -43,51 +40,48 @@ import Markdown from "vue3-markdown-it";
 import { formatDate, generateTitleFromContent } from "~/helpers/helpers";
 import { storeToRefs } from "pinia";
 
-const {
-  addNote,
-  fetchNotes,
-  clearCurrentNote,
-  setActiveNote,
-  updateNote,
-  setNoteEdit,
-  setNewNote,
-} = useNotesStore();
+const { updateNote, setNoteEdit, fetchNotes } = useNotesStore();
 
 const { showToast } = useToasterStore();
 
 const notesStore = useNotesStore();
-const { notes, isNewNote, isNoteEditing, currentNote, activeNote } =
+const { notes, isNoteEditing, currentNote, activeNote } =
   storeToRefs(notesStore);
 
-const addNoteHandler = async () => {
-  currentNote.value.date = formatDate();
-  if (currentNote.value.content.length < 1) {
-    currentNote.value.content = "Empty note";
-  }
+const editorHandler = () => {
   currentNote.value.title = generateTitleFromContent(currentNote.value.content);
-  const noteToSave = Object.assign({}, currentNote.value);
-  await addNote(noteToSave);
-  isNewNote.value = false;
-  await fetchNotes();
-  const activeNote = Number(notes.value[notes.value.length - 1].id);
-  setActiveNote(activeNote);
 };
 
-const handleFormLeave = () => {
-  if (isNewNote.value) {
-    addNoteHandler();
-    showToast("note has been created", 3);
-  }
-  if (isNoteEditing && activeNote.value) {
-    currentNote.value.date = formatDate();
-    currentNote.value.title = generateTitleFromContent(
-      currentNote.value.content
-    );
-    updateNote(activeNote.value);
-    setNoteEdit(false);
-    showToast("note has been saved", 3);
+const handleFormLeave = async () => {
+  try {
+    await fetchNotes();
+    if (isNoteEditing && activeNote.value) {
+      if (currentNote.value.content.length < 1) {
+        currentNote.value.content = "New note";
+      }
+      currentNote.value.date = formatDate();
+      currentNote.value.title = generateTitleFromContent(
+        currentNote.value.content
+      );
+      currentNote.value.id = activeNote.value;
+      console.log(activeNote.value);
+      const updatedNote = Object.assign({}, currentNote.value);
+      updateNote(updatedNote);
+      setNoteEdit(false);
+      showToast("note has been saved", 3);
+    }
+  } catch (error) {
+    console.log(error);
   }
 };
+
+const editor = ref<HTMLElement | null>(null);
+
+onUpdated(() => {
+  if (editor.value) {
+    editor.value!.focus();
+  }
+});
 </script>
 
 <style lang="scss">
@@ -110,6 +104,7 @@ const handleFormLeave = () => {
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 100%;
 
   &__form {
     width: 100%;
@@ -139,6 +134,7 @@ const handleFormLeave = () => {
     align-self: flex-start;
     width: 100%;
     height: 100%;
+    flex-grow: 1;
 
     &.isNoteEditing {
       background: #f8f3e6;

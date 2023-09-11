@@ -16,10 +16,17 @@ import { useNotesStore } from "~/store/notesStore";
 import { storeToRefs } from "pinia";
 import { useToasterStore } from "~/store/toasterStore";
 
-const { setNewNote, setActiveNote, clearCurrentNote, removeNote } =
-  useNotesStore();
+const {
+  setActiveNote,
+  clearCurrentNote,
+  addNote,
+  removeNote,
+  setNoteEdit,
+  fetchNotes,
+} = useNotesStore();
+
 const { showToast } = useToasterStore();
-const { activeNote } = storeToRefs(useNotesStore());
+const { activeNote, currentNote, notes } = storeToRefs(useNotesStore());
 
 const removeNoteHandler = () => {
   if (
@@ -29,13 +36,24 @@ const removeNoteHandler = () => {
     removeNote(activeNote.value);
     setActiveNote(0);
     clearCurrentNote();
-    showToast("note has been removed", 3);
+    showToast("Note has been removed", 3);
   }
 };
 
-const createNoteHandler = () => {
-  setNewNote(true);
-  clearCurrentNote();
+const createNoteHandler = async () => {
+  try {
+    clearCurrentNote();
+    console.log(currentNote.value);
+    const newNote = Object.assign({}, currentNote.value);
+    const createdNote = await addNote(newNote);
+    await fetchNotes();
+    if (createdNote) {
+      setActiveNote(createdNote);
+      setNoteEdit(true);
+    }
+  } catch (error) {
+    console.log(error);
+  }
 };
 </script>
 

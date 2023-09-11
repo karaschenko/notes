@@ -1,16 +1,28 @@
 <template>
   <li :class="{ active: note.id === activeId }" class="notes-item">
-    <div class="notes-item__title">{{ note?.title }}</div>
-    <div class="notes-item__content">
-      <div class="notes-item__date">{{ note?.date }}</div>
-      <div class="notes-item__text">{{ note?.content }}</div>
+    <div v-if="note.id === activeId && isNoteEditing">
+      <div class="notes-item__title">{{ currentNote?.title }}</div>
+      <div class="notes-item__content">
+        <div class="notes-item__date">{{ currentNote?.date }}</div>
+        <div class="notes-item__text">{{ currentNote?.content }}</div>
+      </div>
+    </div>
+    <div v-else>
+      <div class="notes-item__title">{{ note?.title }}</div>
+      <div class="notes-item__content">
+        <div class="notes-item__date">{{ note?.date }}</div>
+        <div class="notes-item__text">{{ note?.content }}</div>
+      </div>
     </div>
   </li>
 </template>
 
 <script lang="ts" setup>
 import { Note } from "~/types/types";
+import { storeToRefs } from "pinia";
+import { useNotesStore } from "~/store/notesStore";
 
+const { isNoteEditing, currentNote } = storeToRefs(useNotesStore());
 const props = defineProps({
   note: {
     type: Object as () => Note,
@@ -53,6 +65,7 @@ const props = defineProps({
   &__title {
     @include text-ellipsis;
     font-weight: bold;
+    margin-bottom: var(--base-space);
   }
 
   &__content {
@@ -77,7 +90,6 @@ const props = defineProps({
 
   &__date {
     white-space: nowrap;
-    font-weight: bold;
 
     @media (max-width: $medium-screen) {
       display: none;

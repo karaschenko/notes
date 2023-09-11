@@ -16,7 +16,6 @@ export interface MyDB extends DBSchema {
 
 export interface NotesStoreState {
   notes: Note[];
-  isNewNote: boolean;
   isNoteEditing: boolean;
   activeNote: number | null;
   currentNote: Note;

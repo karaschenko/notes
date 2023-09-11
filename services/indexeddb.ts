@@ -29,7 +29,8 @@ const indexedDBService = {
     const db = await openNotesDB();
     const tx = db.transaction("notes", "readwrite");
     const store = tx.objectStore("notes");
-    await store.add(note);
+    const id = await store.add(note);
+    return id;
   },
 
   async getAllNotes() {
@@ -50,6 +51,8 @@ const indexedDBService = {
     const tx = db.transaction("notes", "readwrite");
     const store = tx.objectStore("notes");
     await store.put(updatedNote);
+
+    return updatedNote;
   },
   async searchNotes(query: string) {
     const db = await openNotesDB();
