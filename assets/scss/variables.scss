@@ -1,26 +1,25 @@
 // colors from apple notes color scheme:
-$primary-color: #FFD52E;
-$ghost-white-color: #F9F9F9;
-$platinum-color: #E5E5E5;
+$primary-color: #ffd52e;
+$ghost-white-color: #f9f9f9;
+$platinum-color: #e5e5e5;
 
-$border-color: #D3D3D3;
+$border-color: #d3d3d3;
 
 $black-text: #000;
-$dark-gray-text: #000;
-$light-gray-text: #000;
-$blue-text: #000;
+$dark-gray-text: #333;
+$light-gray-text: #999;
 
-//spaces
-$base-space: 8px;
-
-//font-size
-$base-font-size: 16px;
-
-
-//font-family
-$main-font-family: -apple-system, BlinkMacSystemFont, 'San Francisco', 'Roboto', sans-serif;
+//font-family (apple)
+$main-font-family: -apple-system, BlinkMacSystemFont, "San Francisco", "Roboto",
+  sans-serif;
 
 //breack-points
 $small-screen: 768px;
 $medium-screen: 1024px;
 
+//mixins
+@mixin text-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

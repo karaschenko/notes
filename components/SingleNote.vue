@@ -1,35 +1,122 @@
-
 <template>
-  <div class="single-note">
-    <form @submit.prevent="addNoteHandler" >
-      <input v-model="newNote.title" placeholder="Title" required />
-      <textarea v-model="newNote.content" placeholder="Content" required></textarea>
-      <button type="submit">Add Note</button>
-    </form>
+  <div>
+    <div v-if="notes.length < 1 && !isNewNote" class="note-placeholder">
+      <div>There are no notes yet!</div>
+      <ui-icon-button icon="fa-plus" @click="setNewNote(true)"
+        >Create first</ui-icon-button
+      >
+    </div>
 
-    <Markdown :source="newNote.content" />
+    <div v-else class="note-editor">
+      <div class="note-editor__time">
+        {{ currentNote?.date }}
+      </div>
+      <form
+        v-if="isNewNote || isNoteEditing"
+        @submit.prevent="addNoteHandler"
+        v-click-outside="handleFormLeave"
+      >
+        <textarea
+          class="note-editor__field"
+          v-model="currentNote.content"
+          placeholder="Type here"
+          required
+        ></textarea>
+
+        <ui-icon-button
+          class="note-editor__create"
+          v-if="isNewNote"
+          icon="fas fa-plus"
+          type="submit"
+        >
+          Create
+        </ui-icon-button>
+      </form>
+
+      <Markdown class="note-editor__result" :source="currentNote?.content" />
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
-import { useNotesStore } from '~/store/notesStore';
-import Markdown from 'vue3-markdown-it';
-import { formatDate } from '~/helpers/helpers';
+import { useNotesStore } from "~/store/notesStore";
+import Markdown from "vue3-markdown-it";
+import { formatDate, generateTitleFromContent } from "~/helpers/helpers";
+import { storeToRefs } from "pinia";
 
-const { addNote, fetchNotes } = useNotesStore();
+const {
+  addNote,
+  fetchNotes,
+  clearCurrentNote,
+  setActiveNote,
+  updateNote,
+  setNoteEdit,
+  setNewNote,
+} = useNotesStore();
 
-
-const newNote = ref({ title: '', content: '', date: formatDate() });
-const source = ref('# Hello World! \n ## Заголовок два \n  > Blockquotes ');
+const notesStore = useNotesStore();
+const { notes, isNewNote, isNoteEditing, currentNote, activeNote } =
+  storeToRefs(notesStore);
 
 const addNoteHandler = async () => {
-    const noteToSave = Object.assign({}, newNote.value)
-    await addNote(noteToSave);
-    newNote.value = { title: '', content: '', date: '' };
-    await fetchNotes();
+  currentNote.value.date = formatDate();
+  if (currentNote.value.content.length < 1) {
+    currentNote.value.content = "Empty note";
+  }
+  currentNote.value.title = generateTitleFromContent(currentNote.value.content);
+  const noteToSave = Object.assign({}, currentNote.value);
+  await addNote(noteToSave);
+  clearCurrentNote();
+  isNewNote.value = false;
+  await fetchNotes();
+  const activeNote = Number(notes.value[notes.value.length - 1].id);
+  setActiveNote(activeNote);
+};
+
+const handleFormLeave = () => {
+  const editedNote = activeNote.value;
+  if (confirm("Do you want to save your changes?")) {
+    if (isNewNote) {
+      addNoteHandler();
+    }
+    if (isNoteEditing && activeNote.value) {
+      updateNote(activeNote.value);
+      setNoteEdit(false);
+    }
+  } else {
+    console.log(activeNote.value);
+    setActiveNote(editedNote ?? 0);
+  }
 };
 </script>
 
 <style lang="scss">
+@import "@/assets/scss/variables.scss";
+
+.note-placeholder {
+  display: flex;
+  min-height: 70vh;
+  align-items: center;
+  justify-content: center;
+  gap: var(--base-space);
+
+  .ui-icon-button {
+    border: 1px solid $border-color;
+  }
+}
+
+.note-editor {
+  padding: calc(2 * var(--base-space));
+
+  &__field {
+    all: unset;
+    width: 100%;
+    height: 100%;
+    min-height: 30vh;
+  }
+
+  &__create {
+    border: 1px solid $border-color;
+  }
+}
 </style>

@@ -17,6 +17,7 @@
 @import "@/assets/scss/variables.scss";
 
 .notes {
+  border: 1px solid $border-color;
   &-header {
     display: flex;
   }

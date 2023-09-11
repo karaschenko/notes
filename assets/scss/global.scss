@@ -1,4 +1,4 @@
-@import 'variables';
+@import "variables";
 
 * {
   margin: 0;
@@ -6,19 +6,39 @@
   box-sizing: border-box;
 }
 
-body {
-    font-family: $main-font-family;
-    font-size: $base-font-size;
+:root {
+  --base-space: 0.5rem;
+}
 
-    @media (max-width: $medium-screen) {
-        font-size: $base-font-size - 2px;
-    }
+@media (max-width: $medium-screen) {
+  :root {
+    --base-space: 0.4rem;
+  }
+}
+
+@media (max-width: $small-screen) {
+  :root {
+    --base-space: 0.3rem;
+  }
+}
+
+body {
+  font-family: $main-font-family;
+  font-size: 1rem;
+  background: $ghost-white-color;
+
+  @media (max-width: $medium-screen) {
+    font-size: 0.85rem;
+  }
+
+  @media (max-width: $small-screen) {
+    font-size: 0.7rem;
+  }
 }
 
 .container {
-    width: 100%;
-    max-width: 1200px;
-    padding: 0 2 * $base-space;
-    margin: auto;
-    background: $ghost-white-color;
+  width: 100%;
+  max-width: 1200px;
+  padding: 0 calc(2 * var(--base-space));
+  margin: auto;
 }

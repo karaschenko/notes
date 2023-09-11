@@ -2,18 +2,30 @@
 
 <template>
   <div class="notes-actions">
-    <ui-icon-button icon="fa-plus" @click="setNewNote(true)" />
+    <ui-icon-button icon="fa-plus" @click="createNoteHandler" />
     <ui-icon-button icon="fa-trash-alt" @click="removeNoteHandler" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import { useNotesStore } from "~/store/notesStore";
+import { storeToRefs } from "pinia";
 
-const { setNewNote, removeNote, activeNote } = useNotesStore();
+const { setNewNote, clearCurrentNote, removeNote } = useNotesStore();
+const { activeNote } = storeToRefs(useNotesStore());
 
 const removeNoteHandler = () => {
-  console.log("remove", activeNote, typeof activeNote);
+  if (
+    activeNote.value &&
+    confirm(`are you sure to remove note with id ${activeNote.value}`)
+  ) {
+    removeNote(activeNote.value);
+  }
+};
+
+const createNoteHandler = () => {
+  setNewNote(true);
+  clearCurrentNote();
 };
 </script>
 
@@ -21,7 +33,7 @@ const removeNoteHandler = () => {
 @import "@/assets/scss/variables.scss";
 .notes-actions {
   display: flex;
-  padding: 2 * $base-space;
-  gap: $base-space;
+  padding: calc(2 * var(--base-space));
+  gap: var(--base-space);
 }
 </style>
