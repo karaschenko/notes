@@ -17,7 +17,6 @@
         <textarea
           class="note-editor__field"
           ref="editor"
-          s
           v-model="currentNote.content"
           placeholder="Type here"
           @input="editorHandler"
@@ -64,6 +63,7 @@ const handleFormLeave = async () => {
         currentNote.value.content
       );
       currentNote.value.id = activeNote.value;
+      console.log(activeNote.value);
       const updatedNote = Object.assign({}, currentNote.value);
       updateNote(updatedNote);
       setNoteEdit(false);

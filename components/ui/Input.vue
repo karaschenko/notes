@@ -16,10 +16,10 @@ import { defineProps, defineEmits } from "vue";
 const props = defineProps({
   icon: String,
   value: String,
-  updateValue: Function, // Custom prop to handle two-way binding
+  updateValue: Function,
 });
 
-const emits = defineEmits(["update:value"]); // Emit the update event
+const emits = defineEmits(["update:value"]);
 
 const updateValue = (event) => {
   props.updateValue(event.target.value);
@@ -59,9 +59,9 @@ const updateValue = (event) => {
     position: absolute;
     z-index: 1;
     left: calc(0.8 * var(--base-space));
-    margin-left: 0.5rem; /* Adjust margin to separate icon from input */
-    top: 50%; /* Center vertically */
-    transform: translateY(-50%); /* Center vertically */
+    margin-left: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
 
     @media (max-width: $medium-screen) {
       font-size: 0.8rem;
