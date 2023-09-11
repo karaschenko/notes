@@ -8,32 +8,37 @@
 
 :root {
   --base-space: 0.5rem;
+  --base-font-size: 1rem;
 }
 
 @media (max-width: $medium-screen) {
   :root {
     --base-space: 0.4rem;
+    --base-font-size: 0.85rem;
   }
 }
 
 @media (max-width: $small-screen) {
   :root {
     --base-space: 0.3rem;
+    --base-font-size: 0.7rem;
   }
 }
 
 body {
   font-family: $main-font-family;
-  font-size: 1rem;
+  font-size: var(--base-font-size);
   background: $ghost-white-color;
+}
 
-  @media (max-width: $medium-screen) {
-    font-size: 0.85rem;
-  }
+h1 {
+  font-size: calc(2 * var(--base-font-size));
+  text-align: center;
+  padding: calc(2 * var(--base-space));
+}
 
-  @media (max-width: $small-screen) {
-    font-size: 0.7rem;
-  }
+h2 {
+  font-size: calc(1.5 * var(--base-font-size));
 }
 
 .container {

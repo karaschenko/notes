@@ -2,6 +2,7 @@
   <div class="note-toolbar">
     <div class="note-toolbar__left">
       <ui-icon-button
+        v-if="!isNewNote"
         :icon="isNoteEditing ? 'fa-save' : 'fa-edit'"
         @click="editNote"
       />
@@ -16,7 +17,6 @@
         @input="searchNotes"
         placeholder="Search..."
       ></ui-input>
-      {{ searchText }}
     </div>
   </div>
 </template>
@@ -31,7 +31,8 @@ import {
 } from "~/helpers/helpers";
 
 const notesStore = useNotesStore();
-const { isNoteEditing, activeNote, currentNote } = storeToRefs(notesStore);
+const { isNoteEditing, activeNote, currentNote, isNewNote } =
+  storeToRefs(notesStore);
 
 const editNote = () => {
   if (isNoteEditing.value && activeNote.value) {
