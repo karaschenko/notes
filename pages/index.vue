@@ -1,13 +1,14 @@
 <template>
   <div class="notes">
     <div class="notes-header">
-      <notes-actions class="notes-header__actions" />
-      <note-header class="notes-header__toolbar" />
+      <header-notes-actions class="notes-header__actions" />
+      <header-notes-toolbar class="notes-header__toolbar" />
     </div>
     <div class="notes-body">
       <NoteList class="note-list" />
       <SingleNote class="single-note" />
     </div>
+    <ui-toaster />
   </div>
 </template>
 
@@ -18,6 +19,11 @@
 
 .notes {
   border: 1px solid $border-color;
+  @media (max-width: $medium-screen) {
+    border: 0;
+    border-bottom: 1px solid $border-color;
+  }
+
   &-header {
     display: flex;
   }

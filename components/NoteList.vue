@@ -43,6 +43,7 @@ onMounted(async () => {
   list-style: none;
   max-height: 80vh;
   overflow: auto;
+  min-height: 70vh;
 
   &__item {
     padding: var(--base-space);

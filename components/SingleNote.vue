@@ -15,6 +15,7 @@
         v-if="isNewNote || isNoteEditing"
         @submit.prevent="addNoteHandler"
         v-click-outside="handleFormLeave"
+        class="note-editor__form"
       >
         <textarea
           class="note-editor__field"
@@ -24,22 +25,27 @@
         ></textarea>
 
         <ui-icon-button
-          class="note-editor__create"
+          class="note-editor__create bordered"
           v-if="isNewNote"
           icon="fas fa-plus"
           type="submit"
         >
-          Create
+          Create note
         </ui-icon-button>
       </form>
 
-      <Markdown class="note-editor__result" :source="currentNote?.content" />
+      <Markdown
+        class="note-editor__result"
+        @click="isNoteEditing = true"
+        :source="currentNote?.content"
+      />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { useNotesStore } from "~/store/notesStore";
+import { useToasterStore } from "~/store/toasterStore";
 import Markdown from "vue3-markdown-it";
 import { formatDate, generateTitleFromContent } from "~/helpers/helpers";
 import { storeToRefs } from "pinia";
@@ -53,6 +59,8 @@ const {
   setNoteEdit,
   setNewNote,
 } = useNotesStore();
+
+const { showToast } = useToasterStore();
 
 const notesStore = useNotesStore();
 const { notes, isNewNote, isNoteEditing, currentNote, activeNote } =
@@ -74,18 +82,15 @@ const addNoteHandler = async () => {
 };
 
 const handleFormLeave = () => {
-  const editedNote = activeNote.value;
-  if (confirm("Do you want to save your changes?")) {
-    if (isNewNote) {
-      addNoteHandler();
-    }
-    if (isNoteEditing && activeNote.value) {
-      updateNote(activeNote.value);
-      setNoteEdit(false);
-    }
-  } else {
-    console.log(activeNote.value);
-    setActiveNote(editedNote ?? 0);
+  if (isNewNote.value) {
+    addNoteHandler();
+    showToast("note has been created", 3);
+  }
+  if (isNoteEditing && activeNote.value) {
+    currentNote.value.date = formatDate();
+    updateNote(activeNote.value);
+    setNoteEdit(false);
+    showToast("note has been saved", 3);
   }
 };
 </script>
@@ -106,13 +111,36 @@ const handleFormLeave = () => {
 }
 
 .note-editor {
-  padding: calc(2 * var(--base-space));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  &__form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  &__time {
+    color: $light-gray-text;
+  }
 
   &__field {
     all: unset;
     width: 100%;
+    box-sizing: border-box;
+    flex-shrink: 0;
     height: 100%;
     min-height: 30vh;
+    padding: calc(2 * var(--base-space));
+    align-self: flex-start;
+  }
+
+  &__result {
+    padding: calc(2 * var(--base-space));
+    text-align: left;
+    align-self: flex-start;
   }
 
   &__create {

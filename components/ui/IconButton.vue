@@ -41,6 +41,10 @@ const clickOutsideHandler = () => {
   align-items: center;
   justify-content: center;
   gap: var(--base-space);
+
+  &.bordered {
+    border: 1px solid $border-color;
+  }
   & .fas {
     font-size: 1.2rem;
     color: $light-gray-text;
