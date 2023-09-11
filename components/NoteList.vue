@@ -10,6 +10,8 @@
         @click="selectNoteHandler(note.id ?? 0)"
       />
     </ul>
+
+    <div v-else class="notes-list__placeholder">No notes yet</div>
   </div>
 </template>
 
@@ -29,6 +31,9 @@ const selectNoteHandler = (id: number) => {
 
 onMounted(async () => {
   await notesStore.fetchNotes();
+  if (notes.value.length > 0) {
+    selectNoteHandler(notes.value[0].id ?? 0);
+  }
 });
 </script>
 
@@ -53,6 +58,11 @@ onMounted(async () => {
     &.active {
       background: $primary-color;
     }
+  }
+
+  &__placeholder {
+    text-align: center;
+    font-size: calc(1.5 * var(--base-font-size));
   }
 }
 </style>

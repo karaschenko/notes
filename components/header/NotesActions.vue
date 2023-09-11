@@ -3,7 +3,11 @@
 <template>
   <div class="notes-actions">
     <ui-icon-button icon="fa-plus" @click="createNoteHandler" />
-    <ui-icon-button icon="fa-trash-alt" @click="removeNoteHandler" />
+    <ui-icon-button
+      v-if="activeNote"
+      icon="fa-trash-alt"
+      @click="removeNoteHandler"
+    />
   </div>
 </template>
 
@@ -12,7 +16,8 @@ import { useNotesStore } from "~/store/notesStore";
 import { storeToRefs } from "pinia";
 import { useToasterStore } from "~/store/toasterStore";
 
-const { setNewNote, clearCurrentNote, removeNote } = useNotesStore();
+const { setNewNote, setActiveNote, clearCurrentNote, removeNote } =
+  useNotesStore();
 const { showToast } = useToasterStore();
 const { activeNote } = storeToRefs(useNotesStore());
 
@@ -22,6 +27,8 @@ const removeNoteHandler = () => {
     confirm(`are you sure to remove note with id ${activeNote.value}`)
   ) {
     removeNote(activeNote.value);
+    setActiveNote(0);
+    clearCurrentNote();
     showToast("note has been removed", 3);
   }
 };

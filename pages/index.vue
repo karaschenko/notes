@@ -22,6 +22,7 @@
   @media (max-width: $medium-screen) {
     border: 0;
     border-bottom: 1px solid $border-color;
+    border-top: 1px solid $border-color;
   }
 
   &-header {

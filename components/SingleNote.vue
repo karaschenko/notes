@@ -74,7 +74,6 @@ const addNoteHandler = async () => {
   currentNote.value.title = generateTitleFromContent(currentNote.value.content);
   const noteToSave = Object.assign({}, currentNote.value);
   await addNote(noteToSave);
-  clearCurrentNote();
   isNewNote.value = false;
   await fetchNotes();
   const activeNote = Number(notes.value[notes.value.length - 1].id);
@@ -88,6 +87,9 @@ const handleFormLeave = () => {
   }
   if (isNoteEditing && activeNote.value) {
     currentNote.value.date = formatDate();
+    currentNote.value.title = generateTitleFromContent(
+      currentNote.value.content
+    );
     updateNote(activeNote.value);
     setNoteEdit(false);
     showToast("note has been saved", 3);
@@ -103,6 +105,7 @@ const handleFormLeave = () => {
   min-height: 70vh;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   gap: var(--base-space);
 
   .ui-icon-button {

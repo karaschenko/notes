@@ -47,6 +47,10 @@ const updateValue = (event) => {
     border: 1px solid $border-color;
     border-radius: 6px;
     outline: none;
+
+    @media (max-width: $medium-screen) {
+      padding: calc(0.7 * var(--base-space)) calc(4 * var(--base-space));
+    }
   }
 
   & .fas {
