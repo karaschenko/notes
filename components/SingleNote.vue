@@ -23,19 +23,12 @@
           placeholder="Type here"
           required
         ></textarea>
-
-        <ui-icon-button
-          class="note-editor__create bordered"
-          v-if="isNewNote"
-          icon="fas fa-plus"
-          type="submit"
-        >
-          Create note
-        </ui-icon-button>
       </form>
-      <div v-if="isNoteEditing" class="note-editor__heading">Output:</div>
+      <div v-if="isNoteEditing || isNewNote" class="note-editor__heading">
+        Output:
+      </div>
       <Markdown
-        class="note-editor__result"
+        :class="['note-editor__result', { isNoteEditing }]"
         @click="isNoteEditing = true"
         :source="currentNote?.content"
       />
@@ -144,6 +137,12 @@ const handleFormLeave = () => {
     padding: calc(2 * var(--base-space));
     text-align: left;
     align-self: flex-start;
+    width: 100%;
+    height: 100%;
+
+    &.isNoteEditing {
+      background: #f8f3e6;
+    }
 
     blockquote {
       margin: var(--base-space) auto;
@@ -159,6 +158,16 @@ const handleFormLeave = () => {
 
   &__create {
     border: 1px solid $border-color;
+  }
+
+  &__heading {
+    padding: calc(2 * var(--base-space));
+    border-top: 1px solid $border-color;
+    width: 100%;
+    text-align: center;
+    background: #f8f3e6;
+    font-weight: bold;
+    color: $light-gray-text;
   }
 }
 </style>
