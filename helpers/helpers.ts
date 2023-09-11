@@ -4,30 +4,15 @@ export function generateUniqueId() {
   return `${timestamp}${random}`;
 }
 
-export function formatDate(date?: Date): string {
-  const currentDate = date || new Date();
-  const now = new Date(); // Get the current date and time
+export function formatDate(date: Date = new Date()): string {
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const seconds = String(date.getSeconds()).padStart(2, "0");
 
-  // Check if the provided date is today
-  const isToday =
-    currentDate.getDate() === now.getDate() &&
-    currentDate.getMonth() === now.getMonth() &&
-    currentDate.getFullYear() === now.getFullYear();
-
-  if (isToday) {
-    const hours = String(currentDate.getHours()).padStart(2, "0");
-    const minutes = String(currentDate.getMinutes()).padStart(2, "0");
-    const seconds = String(currentDate.getSeconds()).padStart(2, "0");
-    return `Today, ${hours}:${minutes}:${seconds}`;
-  } else {
-    const day = String(currentDate.getDate()).padStart(2, "0");
-    const month = String(currentDate.getMonth() + 1).padStart(2, "0");
-    const year = currentDate.getFullYear();
-    const hours = String(currentDate.getHours()).padStart(2, "0");
-    const minutes = String(currentDate.getMinutes()).padStart(2, "0");
-    const seconds = String(currentDate.getSeconds()).padStart(2, "0");
-    return `${day}/${month}/${year}, ${hours}:${minutes}:${seconds}`;
-  }
+  return `${day}/${month}/${year}, ${hours}:${minutes}:${seconds}`;
 }
 
 export function generateTitleFromContent(content: string): string {
