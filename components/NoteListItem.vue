@@ -3,14 +3,16 @@
     <div v-if="note.id === activeId && isNoteEditing">
       <div class="notes-item__title">{{ currentNote?.title }}</div>
       <div class="notes-item__content">
-        <div class="notes-item__date">{{ currentNote?.date }}</div>
+        <div class="notes-item__date">
+          {{ cutDateString(currentNote?.date) }}
+        </div>
         <div class="notes-item__text">{{ currentNote?.content }}</div>
       </div>
     </div>
     <div v-else>
       <div class="notes-item__title">{{ note?.title }}</div>
       <div class="notes-item__content">
-        <div class="notes-item__date">{{ note?.date }}</div>
+        <div class="notes-item__date">{{ cutDateString(note?.date) }}</div>
         <div class="notes-item__text">{{ note?.content }}</div>
       </div>
     </div>
@@ -33,6 +35,10 @@ const props = defineProps({
     required: true,
   },
 });
+
+const cutDateString = (str: string) => {
+  return str.split(",")[0];
+};
 </script>
 
 <style scoped lang="scss">
@@ -90,6 +96,7 @@ const props = defineProps({
 
   &__date {
     white-space: nowrap;
+    font-weight: 600;
 
     @media (max-width: $medium-screen) {
       display: none;
