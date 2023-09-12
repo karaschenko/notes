@@ -32,7 +32,8 @@ const removeNoteHandler = () => {
     confirm(`are you sure to remove note with id ${activeNote.value}`)
   ) {
     removeNote(activeNote.value);
-    setActiveNote(0);
+    const lastNoteId = notes.value[notes.value.length - 1].id;
+    setActiveNote(lastNoteId ?? 0);
     clearCurrentNote();
     showToast("Note has been removed", 3);
   }

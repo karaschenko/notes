@@ -22,6 +22,7 @@
 
 <script lang="ts" setup>
 import { useNotesStore } from "~/store/notesStore";
+import { useToasterStore } from "~/store/toasterStore";
 import { storeToRefs } from "pinia";
 import {
   debounce,
@@ -30,19 +31,29 @@ import {
 } from "~/helpers/helpers";
 
 const notesStore = useNotesStore();
+const toasterStore = useToasterStore();
 const { isNoteEditing, activeNote, currentNote } = storeToRefs(notesStore);
 
-const editNote = () => {
-  if (isNoteEditing.value && activeNote.value) {
-    currentNote.value.title = generateTitleFromContent(
-      currentNote.value.content
-    );
-    currentNote.value.date = formatDate();
-    notesStore.updateNote(activeNote.value);
-    notesStore.setNoteEdit(false);
-    return;
+const editNote = async () => {
+  try {
+    await notesStore.fetchNotes();
+    if (isNoteEditing && activeNote.value) {
+      if (currentNote.value.content.length < 1) {
+        currentNote.value.content = "New note";
+      }
+      currentNote.value.date = formatDate();
+      currentNote.value.title = generateTitleFromContent(
+        currentNote.value.content
+      );
+      currentNote.value.id = activeNote.value;
+      const updatedNote = Object.assign({}, currentNote.value);
+      notesStore.updateNote(updatedNote);
+      notesStore.setNoteEdit(false);
+      toasterStore.showToast("note has been saved", 3);
+    }
+  } catch (error) {
+    console.log(error);
   }
-  notesStore.setNoteEdit(true);
 };
 
 const searchText = ref("");
