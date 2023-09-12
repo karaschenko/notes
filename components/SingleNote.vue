@@ -22,7 +22,7 @@
           @input="editorHandler"
         ></textarea>
       </form>
-      <div v-if="isNoteEditing" class="note-editor__heading">Output:</div>
+      <div v-if="isNoteEditing" class="note-editor__heading">Preview:</div>
       <Markdown
         :class="['note-editor__result', { isNoteEditing }]"
         @click="isNoteEditing = true"
@@ -63,7 +63,6 @@ const handleFormLeave = async () => {
         currentNote.value.content
       );
       currentNote.value.id = activeNote.value;
-      console.log(activeNote.value);
       const updatedNote = Object.assign({}, currentNote.value);
       updateNote(updatedNote);
       setNoteEdit(false);
@@ -122,7 +121,7 @@ onUpdated(() => {
     box-sizing: border-box;
     flex-shrink: 0;
     height: 100%;
-    min-height: 30vh;
+    min-height: 50vh;
     padding: calc(2 * var(--base-space));
     align-self: flex-start;
   }
@@ -137,6 +136,14 @@ onUpdated(() => {
 
     &.isNoteEditing {
       background: #f8f3e6;
+    }
+
+    h1 {
+      text-align: left;
+    }
+
+    & > * {
+      margin-bottom: calc(2 * var(--base-space));
     }
 
     blockquote {
